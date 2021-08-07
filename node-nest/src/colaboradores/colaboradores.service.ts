@@ -43,12 +43,18 @@ export class ColaboradoresService {
     return this.prisma.colaborador.findMany();
   }
 
-  findOne(id: number) {
-    return this.prisma.colaborador.findMany({
+  async findOne(id: number) {
+    const data = await this.prisma.colaborador.findUnique({
       where: {
         id,
       },
     });
+
+    if (!data) {
+      throw new EntityNotFoundError('Colaborador não encontrado');
+    }
+
+    return data;
   }
 
   update(id: number, updateColaboradorDto: UpdateColaboradorDto) {
