@@ -76,13 +76,13 @@ export class ColaboradoresService {
     return this.prisma.colaborador.delete({ where: { id } });
   }
 
-  private findIndexById(id: number) {
-    const index = this.data.findIndex((item) => item?.id == id);
+  // private findIndexById(id: number) {
+  //   const index = this.data.findIndex((item) => item?.id == id);
 
-    if (!this.data[index]) {
-      throw new EntityNotFoundError('Colaborador não encontrado.');
-    }
+  //   if (!this.data[index]) {
+  //     throw new EntityNotFoundError('Colaborador não encontrado.');
+  //   }
 
-    return index;
-  }
+  //   return index;
+  // }
 }
