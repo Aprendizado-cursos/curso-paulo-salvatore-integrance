@@ -5,6 +5,7 @@ import { CreateColaboradorDto } from './dto/create-colaborador.dto';
 import { UpdateColaboradorDto } from './dto/update-colaborador.dto';
 import { Colaborador } from './entities/colaborador.entity';
 import { Prisma } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 @Injectable()
 export class ColaboradoresService {
@@ -71,7 +72,12 @@ export class ColaboradoresService {
       ...updateColaboradorDto,
     };
 
-    return this.prisma.colaborador.update({ where: { id }, data });
+    return this.prisma.colaborador
+      .update({
+        where: { id },
+        data,
+      })
+      .catch(this.handleDataBaseError);
   }
 
   remove(id: number) {
@@ -79,7 +85,16 @@ export class ColaboradoresService {
 
     // delete this.data[index];
 
-    return this.prisma.colaborador.delete({ where: { id } });
+    return this.prisma.colaborador
+      .delete({ where: { id } })
+      .catch(this.handleDataBaseError);
+  }
+
+  private handleDataBaseError(error: PrismaClientKnownRequestError) {
+    if (error.code === 'P2025') {
+      throw new EntityNotFoundError('Colaborador não encontrado');
+    }
+    throw error;
   }
 
   // private findIndexById(id: number) {
