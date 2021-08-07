@@ -33,13 +33,17 @@ export class ColaboradoresService {
   }
 
   findAll() {
-    return this.data.filter(Boolean);
+    return this.prisma.colaborador.findMany();
   }
 
   findOne(id: number) {
     const index = this.findIndexById(id);
 
-    return this.data[index];
+    return this.prisma.colaborador.findMany({
+      where: {
+        id,
+      },
+    });
   }
 
   update(id: number, updateColaboradorDto: UpdateColaboradorDto) {
