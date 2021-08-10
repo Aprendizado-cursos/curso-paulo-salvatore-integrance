@@ -45,15 +45,18 @@ export class ColaboradoresService {
   }
 
   async findOne(id: number) {
-    const data = await this.prisma.colaborador.findUnique({
-      where: {
-        id,
-      },
-    });
+    const data = await this.prisma.colaborador
+      .findUnique({
+        where: {
+          id,
+        },
+        rejectOnNotFound: true,
+      })
+      .catch(this.handleDataBaseError);
 
-    if (!data) {
-      throw new EntityNotFoundError('Colaborador não encontrado');
-    }
+    // if (!data) {
+    //   throw new EntityNotFoundError('Colaborador não encontrado');
+    // }
 
     return data;
   }
@@ -90,8 +93,8 @@ export class ColaboradoresService {
       .catch(this.handleDataBaseError);
   }
 
-  private handleDataBaseError(error: PrismaClientKnownRequestError) {
-    if (error.code === 'P2025') {
+  private handleDataBaseError(error: PrismaClientKnownRequestError): Error {
+    if (error.code === 'P2025' || error.name === 'NotFoundError') {
       throw new EntityNotFoundError('Colaborador não encontrado');
     }
     throw error;
