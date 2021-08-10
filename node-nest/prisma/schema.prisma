@@ -11,7 +11,15 @@ generator client {
 }
 
 model colaborador {
-  id    Int    @id @default(autoincrement())
-  nome  String
-  idade Int?
+  id        Int    @id @default(autoincrement())
+  nome      String
+  idade     Int?
+  empresaId Int
+  empresa empresa @relation(fields: [empresaId], references: [id])
+}
+
+model empresa {
+  id            Int           @id @default(autoincrement())
+  razaoSocial   String
+  colaboradores colaborador[]
 }
