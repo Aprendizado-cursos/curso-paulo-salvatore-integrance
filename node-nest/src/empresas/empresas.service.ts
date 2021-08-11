@@ -21,7 +21,16 @@ export class EmpresasService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} empresa`;
+    const empresa = this.prisma.empresa
+      .findUnique({
+        where: {
+          id,
+        },
+        rejectOnNotFound: true,
+      })
+      .catch((e) => this.prisma.handleDataBaseError(e, 'Empresa'));
+
+    return empresa;
   }
 
   update(id: number, updateEmpresaDto: UpdateEmpresaDto) {
