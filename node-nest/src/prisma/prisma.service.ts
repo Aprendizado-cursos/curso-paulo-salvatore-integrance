@@ -22,6 +22,10 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     if (error.code === 'P2025' || error.name === 'NotFoundError') {
       throw new EntityNotFoundError(`${entity} não encontrado(a)`);
     }
+    if (error.code === 'P2003') {
+      throw new EntityNotFoundError(`${entity} não encontrado(a)`);
+    }
+
     throw error;
   }
 }
