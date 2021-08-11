@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client';
 import { Empresa } from 'src/empresas/entities/empresa.entity';
 
 export class Colaborador {

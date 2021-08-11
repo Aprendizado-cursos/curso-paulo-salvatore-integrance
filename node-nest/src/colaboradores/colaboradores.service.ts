@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { EntityNotFoundError } from 'src/errors/entity-not-found.error';
 import { CreateColaboradorDto } from './dto/create-colaborador.dto';
 import { UpdateColaboradorDto } from './dto/update-colaborador.dto';
-import { Colaborador } from './entities/colaborador.entity';
 import { Prisma } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { Colaborador } from './entities/colaborador.entity';
 
 @Injectable()
 export class ColaboradoresService {
@@ -25,7 +25,7 @@ export class ColaboradoresService {
 
     // return item;
 
-    const data: Prisma.colaboradorCreateInput = {
+    const data: CreateColaboradorDto = {
       ...createColaboradorDto,
     };
 
@@ -88,6 +88,9 @@ export class ColaboradoresService {
   private handleDataBaseError(error: PrismaClientKnownRequestError): Error {
     if (error.code === 'P2025' || error.name === 'NotFoundError') {
       throw new EntityNotFoundError('Colaborador não encontrado');
+    }
+    if (error.code === 'P2003') {
+      throw new EntityNotFoundError('Empresa não encontrada');
     }
     throw error;
   }
