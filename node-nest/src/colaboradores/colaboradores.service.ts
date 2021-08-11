@@ -5,7 +5,6 @@ import { CreateColaboradorDto } from './dto/create-colaborador.dto';
 import { UpdateColaboradorDto } from './dto/update-colaborador.dto';
 import { Prisma } from '@prisma/client';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
-import { Colaborador } from './entities/colaborador.entity';
 
 @Injectable()
 export class ColaboradoresService {
@@ -29,11 +28,13 @@ export class ColaboradoresService {
       ...createColaboradorDto,
     };
 
-    return this.prisma.colaborador.create({ data });
+    return this.prisma.colaborador
+      .create({ data, include: { empresa: true } })
+      .catch(this.handleDataBaseError);
   }
 
   findAll() {
-    return this.prisma.colaborador.findMany();
+    return this.prisma.colaborador.findMany({ include: { empresa: true } });
   }
 
   async findOne(id: number) {
@@ -42,6 +43,7 @@ export class ColaboradoresService {
         where: {
           id,
         },
+        include: { empresa: true },
         rejectOnNotFound: true,
       })
       .catch(this.handleDataBaseError);
@@ -71,6 +73,7 @@ export class ColaboradoresService {
       .update({
         where: { id },
         data,
+        include: { empresa: true },
       })
       .catch(this.handleDataBaseError);
   }
@@ -92,6 +95,7 @@ export class ColaboradoresService {
     if (error.code === 'P2003') {
       throw new EntityNotFoundError('Empresa não encontrada');
     }
+
     throw error;
   }
 
