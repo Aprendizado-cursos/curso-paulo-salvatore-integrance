@@ -1,10 +1,8 @@
 import { PrismaService } from './../prisma/prisma.service';
 import { Injectable } from '@nestjs/common';
-import { EntityNotFoundError } from 'src/errors/entity-not-found.error';
 import { CreateColaboradorDto } from './dto/create-colaborador.dto';
 import { UpdateColaboradorDto } from './dto/update-colaborador.dto';
 import { Prisma } from '@prisma/client';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 @Injectable()
 export class ColaboradoresService {
@@ -30,7 +28,7 @@ export class ColaboradoresService {
 
     return this.prisma.colaborador
       .create({ data, include: { empresa: true } })
-      .catch(this.handleDataBaseError);
+      .catch((e) => this.prisma.handleDataBaseError(e, 'Colaborador'));
   }
 
   findAll() {
@@ -46,7 +44,7 @@ export class ColaboradoresService {
         include: { empresa: true },
         rejectOnNotFound: true,
       })
-      .catch(this.handleDataBaseError);
+      .catch((e) => this.prisma.handleDataBaseError(e, 'Colaborador'));
 
     // if (!data) {
     //   throw new EntityNotFoundError('Colaborador não encontrado');
@@ -75,7 +73,7 @@ export class ColaboradoresService {
         data,
         include: { empresa: true },
       })
-      .catch(this.handleDataBaseError);
+      .catch((e) => this.prisma.handleDataBaseError(e, 'Colaborador'));
   }
 
   remove(id: number) {
@@ -85,19 +83,19 @@ export class ColaboradoresService {
 
     return this.prisma.colaborador
       .delete({ where: { id } })
-      .catch(this.handleDataBaseError);
+      .catch((e) => this.prisma.handleDataBaseError(e, 'Colaborador'));
   }
 
-  private handleDataBaseError(error: PrismaClientKnownRequestError): Error {
-    if (error.code === 'P2025' || error.name === 'NotFoundError') {
-      throw new EntityNotFoundError('Colaborador não encontrado');
-    }
-    if (error.code === 'P2003') {
-      throw new EntityNotFoundError('Empresa não encontrada');
-    }
+  // private handleDataBaseError(error: PrismaClientKnownRequestError): Error {
+  //   if (error.code === 'P2025' || error.name === 'NotFoundError') {
+  //     throw new EntityNotFoundError('Colaborador não encontrado');
+  //   }
+  //   if (error.code === 'P2003') {
+  //     throw new EntityNotFoundError('Empresa não encontrada');
+  //   }
 
-    throw error;
-  }
+  //   throw error;
+  // }
 
   // private findIndexById(id: number) {
   //   const index = this.data.findIndex((item) => item?.id == id);
