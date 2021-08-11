@@ -34,7 +34,12 @@ export class EmpresasService {
   }
 
   update(id: number, updateEmpresaDto: UpdateEmpresaDto) {
-    return `This action updates a #${id} empresa`;
+    const data: Empresa = {
+      ...updateEmpresaDto,
+    };
+    return this.prisma.empresa
+      .update({ where: { id: id }, data })
+      .catch((e) => this.prisma.handleDataBaseError(e, 'Empresa'));
   }
 
   remove(id: number) {
