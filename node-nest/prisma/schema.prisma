@@ -11,11 +11,11 @@ generator client {
 }
 
 model colaborador {
-  id        Int    @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   nome      String
   idade     Int?
   empresaId Int
-  empresa empresa @relation(fields: [empresaId], references: [id])
+  empresa   empresa @relation(fields: [empresaId], references: [id])
 }
 
 model empresa {
