@@ -1,5 +1,7 @@
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
+import { EntityNotFoundError } from 'src/errors/entity-not-found.error';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
@@ -11,5 +13,15 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
     this.$on('beforeExit', async () => {
       await app.close();
     });
+  }
+
+  handleDataBaseError(
+    error: PrismaClientKnownRequestError,
+    entity: string,
+  ): Error {
+    if (error.code === 'P2025' || error.name === 'NotFoundError') {
+      throw new EntityNotFoundError(`${entity} não encontrado(a)`);
+    }
+    throw error;
   }
 }
