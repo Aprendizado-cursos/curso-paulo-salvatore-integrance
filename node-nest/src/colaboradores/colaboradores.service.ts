@@ -15,14 +15,6 @@ export class ColaboradoresService {
 
   constructor(private readonly prisma: PrismaService) {}
 
-  private readonly data: Colaborador[] = [
-    {
-      id: 1,
-      nome: 'Paulo Salvatore',
-      idade: 99,
-    },
-  ];
-
   create(createColaboradorDto: CreateColaboradorDto) {
     // const item: Colaborador = {
     //   id: this.data.length + 1,

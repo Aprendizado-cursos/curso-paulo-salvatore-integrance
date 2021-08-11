@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { EmpresasService } from './empresas.service';
 import { CreateEmpresaDto } from './dto/create-empresa.dto';
@@ -26,16 +28,17 @@ export class EmpresasController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.empresasService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.empresasService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEmpresaDto: UpdateEmpresaDto) {
-    return this.empresasService.update(+id, updateEmpresaDto);
+  update(@Param('id') id: number, @Body() updateEmpresaDto: UpdateEmpresaDto) {
+    return this.empresasService.update(id, updateEmpresaDto);
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
     return this.empresasService.remove(+id);
   }
