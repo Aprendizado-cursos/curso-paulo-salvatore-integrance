@@ -1,15 +1,23 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateEmpresaDto } from './dto/create-empresa.dto';
 import { UpdateEmpresaDto } from './dto/update-empresa.dto';
+import { Empresa } from './entities/empresa.entity';
 
 @Injectable()
 export class EmpresasService {
+  constructor(private readonly prisma: PrismaService) {}
+
   create(createEmpresaDto: CreateEmpresaDto) {
-    return 'This action adds a new empresa';
+    const data: Empresa = {
+      ...createEmpresaDto,
+    };
+
+    return this.prisma.empresa.create({ data });
   }
 
   findAll() {
-    return `This action returns all empresas`;
+    return this.prisma.empresa.findMany();
   }
 
   findOne(id: number) {

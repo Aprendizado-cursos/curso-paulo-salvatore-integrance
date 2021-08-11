@@ -1,7 +1,7 @@
-import { Prisma } from '@prisma/client';
+import { Colaborador } from '../../colaboradores/entities/colaborador.entity';
 
-export class Empresa implements Prisma.empresaCreateInput {
+export class Empresa {
   id?: number;
   razaoSocial: string;
-  colaboradores?: Prisma.colaboradorCreateNestedManyWithoutEmpresaInput;
+  colaboradores: Colaborador[];
 }
