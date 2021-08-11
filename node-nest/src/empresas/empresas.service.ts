@@ -38,6 +38,8 @@ export class EmpresasService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} empresa`;
+    return this.prisma.empresa
+      .delete({ where: { id } })
+      .catch((e) => this.prisma.handleDataBaseError(e, 'Empresa'));
   }
 }
